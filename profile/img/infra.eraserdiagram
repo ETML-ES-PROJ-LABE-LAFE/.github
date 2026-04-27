@@ -3,13 +3,16 @@
 direction right
 
 // Define groups and nodes
-SYS-ADMIN [icon: user]
+OPS [icon: user]
+DEV [icon: user]
 ENDUSER [icon: user]
 
 CLOUD [icon: cloud]
 
 CLOUD-PROVIDER {
   REGION{
+    FRONT-END-STATIC-HOSTING [icon: aws-s3]
+    FRONT-END-SECURIZATION[icon: aws-cloudfront]
     VPC [icon: aws-vpc] {
       IGW [icon: aws-internet-gateway]
       BASTILLON {
@@ -19,39 +22,53 @@ CLOUD-PROVIDER {
         RPROXY-SRV [icon: nginx]
       }
       PRIVATE-SUBNET {
-        ROUTER [icon: router]
-        MON-SRV-LIN [icon: linux]
-        MON-CLI-WIN [icon: windows]
-        MON-CLI-LIN [icon: debian]
-        MON-CLI-DOCKER-ENGINE {
+        DOCKER-ENGINE {
           API-GATEWAY [icon: docker]
           CONT-1 [icon: docker]
           CONT-2 [icon: docker]
+          VOL-1 [icon: database]
+          VOL-2 [icon: database]
         }
       }
     }
   }
 }
 
+SAAS{
+  GITHUB-ORGANIZATION{
+    CI-CD-CD-PIPELINE{
+      REPOSITORY[icon: github]
+      WORKFLOW[icon: github-actions]
+      DOCKER-IMAGE-REGISTERY[icon: github]
+    }
+  }
+}
+
 // Define connections
 // INBOUNDS
-SYS-ADMIN > CLOUD : "22 : SSH"
-ENDUSER > CLOUD : "443 : HTTPS"
+OPS - CLOUD : "22 : SSH"
+ENDUSER - CLOUD : "443 : HTTPS"
+CLOUD - FRONT-END-SECURIZATION : "443 : HTTPS"
 
-CLOUD > IGW : "22 : SSH \n 443 : HTTPS"
+CLOUD - IGW : "22 : SSH \n 443 : HTTPS"
 
-IGW > SSH-SRV : "22 : SSH"
-IGW > RPROXY-SRV : "443 : HTTPS"
+IGW - SSH-SRV : "22 : SSH"
+IGW - RPROXY-SRV : "443 : HTTPS"
 
-SSH-SRV > PRIVATE-SUBNET : "3389 : RDP \n 22 : SSH"
-RPROXY-SRV > MON-SRV-LIN : "8080 : HTTP"
-RPROXY-SRV > API-GATEWAY : "8080 : HTTP"
-
-// PRIVATE SUBNET
-MON-SRV-LIN - ROUTER : "? : ?"
-MON-CLI-WIN - ROUTER : "? : ?"
-MON-CLI-LIN - ROUTER : "? : ?"
-MON-CLI-DOCKER-ENGINE - ROUTER : "? : ?"
+SSH-SRV - PRIVATE-SUBNET : "22 : SSH"
+RPROXY-SRV - API-GATEWAY : "8080 : HTTP"
 
 API-GATEWAY - CONT-1
+CONT-1 - VOL-1 : "3306 : TCP"
 API-GATEWAY - CONT-2
+CONT-2 - VOL-2 : "3306 : TCP"
+
+//CI-CD-CD PIPELINE
+DEV - REPOSITORY : "22 : SSH \n 443 : HTTPS"
+REPOSITORY - WORKFLOW : "internal"
+WORKFLOW - DOCKER-IMAGE-REGISTERY : "internal"
+WORKFLOW - DOCKER-ENGINE : "443 : HTTPS"
+WORKFLOW - FRONT-END-STATIC-HOSTING : "443 : HTTPS"
+
+
+FRONT-END-SECURIZATION - FRONT-END-STATIC-HOSTING : "internal"
