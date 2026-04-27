@@ -15,7 +15,7 @@ CLOUD-PROVIDER {
     FRONT-END-SECURIZATION[icon: aws-cloudfront]
     VPC [icon: aws-vpc] {
       IGW [icon: aws-internet-gateway]
-      BASTILLON {
+      BASTION {
         SSH-SRV [icon: debian]
       }
       DMZ {
