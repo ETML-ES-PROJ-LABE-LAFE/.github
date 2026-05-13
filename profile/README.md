@@ -26,6 +26,8 @@ Il s'agit d'un environnement de "stage" à des fins d'entraînement et de valida
 
 ## Dod
 
+[DEVOPS BACKLOG](./devops-backlog.md)
+
 "A CI/CD pipeline is considered “done” when it reliably, securely, and automatically takes code from commit to production with full traceability and minimal manual intervention."
 
 This DOD is phased. It should be implemented in incremental steps. Here are the steps to follow, in order of priority, to build a robust pipeline.
