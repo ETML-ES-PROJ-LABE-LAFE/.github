@@ -23,6 +23,14 @@ Il s'agit d'un environnement de "stage" à des fins d'entraînement et de valida
 |IP RANGE|10.0.X.0/28|X = team number|
 |SUBNET DOKER ENGINE - IP|10.0.X.10/28||
 
+## FQDN
+
+|Resource|FQDN|Environment|Purpose|
+|:--|:--|:--|:--|
+|bastion|stage.devopsteamXX.bastion.proj-labe-lafe.cld.education|stage|ops admin access|
+|dmz|stage.devopsteamXX.proj-labe-lafe.cld.education|stage|api enduser - reverse proxy|
+|s3 dev (unsecure)|http://dev.etml.es.proj.labe-lafe.grpX.s3-website.eu-west-3.amazonaws.com/|dev|to test the front-end deployment|
+|s3 stage (secure)|https://stage.etml.es.proj.labe-lafe.grpX.cld.education|stage|to deploy the front-end|
 
 ## Dod
 
